@@ -22,7 +22,7 @@ const FIELDS = {
 const myPromise = () =>
   new Promise((resolve) => setTimeout(() => resolve("200"), 1000));
 
-const urlApi = process.env.NEXT_PUBLIC_API_URL;
+const urlApi = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api";
 
 const postBlog = async (title: any, content: any, author: any) => {
   try {

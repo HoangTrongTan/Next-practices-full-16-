@@ -14,23 +14,57 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+# Hướng dẫn Setup Jest trong Next.js 16
+
+### Bước 1: Cài đặt các thư viện cần thiết
+
+Mở terminal và chạy lệnh sau để cài đặt Jest, môi trường DOM và các công cụ hỗ trợ TypeScript:
+
+```bash
+npm install --save-dev jest jest-environment-jsdom ts-jest ts-node @testing-library/react @testing-library/jest-dom @testing-library/dom @types/jest
+```
+
+**Giải thích các thư viện:**
+* **jest**: Bộ máy chạy test chính.
+* **jest-environment-jsdom**: Giả lập môi trường trình duyệt (DOM) để React có thể render.
+* **ts-jest & ts-node**: Giúp Jest hiểu và chạy được các file cấu hình bằng `.ts`.
+* **@testing-library/react**: Thư viện chính để render component và tương tác (click, type...).
+* **@testing-library/jest-dom**: Cung cấp các lệnh kiểm tra như `.toBeInTheDocument()`.
+* **@types/jest**: Hỗ trợ gợi ý code (Intellisense) cho Jest trong VS Code.
+
+### Bước 2: Tạo file `jest.config.ts` tại thư mục gốc
+Dán đoạn code sau vào file:
+
+```ts
+import type { Config } from 'jest'
+import nextJest from 'next/jest.js'
+
+const createJestConfig = nextJest({
+  // Cung cấp đường dẫn đến ứng dụng Next.js để load next.config.js và file .env
+  dir: './',
+})
+
+// Cấu hình tùy chỉnh cho Jest
+const config: Config = {
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  testEnvironment: 'jest-environment-jsdom',
+  preset: 'ts-jest',
+}
+
+// createJestConfig được xuất ra theo cách này để đảm bảo next/jest có thể load cấu hình async
+export default createJestConfig(config)
+```
+
+### Bước 3: Tạo file `jest.setup.ts` tại thư mục gốc
+
+File này dùng để cấu hình môi trường test trước khi các testcase được chạy (ví dụ: thêm các hàm so sánh tùy chỉnh cho DOM).
+
+Dán nội dung sau vào file:
+
+```ts
+// Mở rộng các hàm expect của Jest với testing-library (ví dụ: .toBeInTheDocument(), .toHaveClass() trong các bài test.)
+import '@testing-library/jest-dom';
+```
+

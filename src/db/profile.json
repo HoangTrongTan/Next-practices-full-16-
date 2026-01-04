@@ -1,0 +1,14 @@
+{
+    "details": {
+        "name": "John Doe",
+        "age": 25,
+        "company": "Tech Solutions Inc.",
+        "position": "Software Engineer",
+        "location": "San Francisco, CA",
+        "skills": ["Web Development", "Mobile Apps", "Cloud Computing"],
+        "email": "johnDoe99@gmail.com"
+    },
+    "": {
+        
+    }
+}

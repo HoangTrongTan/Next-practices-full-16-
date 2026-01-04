@@ -52,6 +52,7 @@ export default function BlogPage(props: Props): JSX.Element {
     },
     { count: 0, incressment: 1 }
   );
+  
   const form = useRef<HTMLFormElement>(null);
   const handleSubmit = async (formData: FormData) => {
     const title = formData.get(FIELDS.TITLE);

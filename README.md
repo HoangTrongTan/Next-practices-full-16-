@@ -68,3 +68,63 @@ Dán nội dung sau vào file:
 import '@testing-library/jest-dom';
 ```
 
+# Hướng dẫn Setup CI/CD trong Next.js
+## 1. Tạo folder `.github/workflows/` Trong thư mục gốc của project, tạo cấu trúc sau:
+```bash
+my-nextjs-project/
+├─ pages/
+├─ components/
+├─ package.json
+├─ .github/
+│   └─ workflows/
+│       └─ ci.yaml
+```
+
+## 2. Khai báo sự kiện `on:`
+Trong file `ci.yaml`, định nghĩa các event sẽ kích hoạt pipeline:
+```yaml
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+```
+
+## 3. Tạo job `build-and-deploy:`
+```bash
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel (Production)
+        if: github.ref == 'refs/heads/main'
+        run: vercel --prod --token=$VERCEL_TOKEN
+
+      - name: Deploy to Vercel (Staging)
+        if: github.ref == 'refs/heads/develop'
+        run: vercel --token=$VERCEL_TOKEN
+```

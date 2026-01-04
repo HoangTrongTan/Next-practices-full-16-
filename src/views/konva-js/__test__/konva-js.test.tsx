@@ -2,6 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import KonvaJSPage from "../index";
 import "@testing-library/jest-dom";
 
+// test ci/cd on branches main
+
 // Tạo một đối tượng lưu trữ các hàm giả bên ngoài để tiện kiểm tra
 const mockActions = {
   opacity: jest.fn(),

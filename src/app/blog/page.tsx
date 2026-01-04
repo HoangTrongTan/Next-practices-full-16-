@@ -1,5 +1,5 @@
 import BlogPage from "@/views/blog";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
 const revalidate = 50; //tăng hiệu suất bằng cách cache data trong 50s
 export default async function Blog() {

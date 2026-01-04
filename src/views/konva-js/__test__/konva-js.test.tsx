@@ -2,6 +2,13 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import KonvaJSPage from "../index";
 import "@testing-library/jest-dom";
 
+// Tạo một đối tượng lưu trữ các hàm giả bên ngoài để tiện kiểm tra
+const mockActions = {
+  opacity: jest.fn(),
+  x: jest.fn(() => 100),
+  y: jest.fn(() => 200),
+};
+
 jest.mock("react-konva", () => ({
   Stage: ({ width, height, children }: any) => (
     <div data-testid="stage-mock-konva" data-width={width} data-height={height}>
@@ -28,17 +35,13 @@ jest.mock("react-konva", () => ({
       onMouseDown={(e) =>
         onDragStart?.({
           target: {
-            opacity: jest.fn(),
+            opacity: mockActions.opacity,
           },
         })
       }
       onMouseUp={(e) =>
         onDragEnd?.({
-          target: {
-            x: () => 100,
-            y: () => 200,
-            opacity: jest.fn(),
-          },
+          target: mockActions,
           //   Trong code thực tế của bạn, bạn dùng: e.target.opacity(0.5) hoặc e.target.x()
           // bạn phải tạo ra một object có cấu trúc y hệt những gì code của bạn đang gọi.
         })
@@ -100,5 +103,13 @@ describe("Konva Robot Component", () => {
 
     // Kiểm tra xem UI có hiển thị tọa độ mới không (nếu bạn có in ra màn hình)
     // Ví dụ: expect(screen.getByText(/x: 150/)).toBeInTheDocument();
+  });
+
+  it("nên gọi hàm opacity với giá trị 0.5 khi bắt đầu kéo", () => {
+    render(<KonvaJSPage />);
+    fireEvent.mouseDown(screen.getByTestId("group-mock-konva"));
+
+    expect(mockActions.opacity).toHaveBeenCalledWith(0.5);
+    // Nếu code thật gọi là 0.6 hoặc không gọi gì cả, test sẽ Fail.
   });
 });

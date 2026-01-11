@@ -95,7 +95,7 @@ on:
 ```
 
 ## 3. Tạo job `build-and-deploy:`
-```bash
+```yaml
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
